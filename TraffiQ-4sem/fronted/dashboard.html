@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TraffiQ Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --bg:        #0d1117;
+    --surface:   #161b22;
+    --surface2:  #1c2330;
+    --border:    #30363d;
+    --border2:   #21262d;
+    --accent:    #58a6ff;
+    --green:     #3fb950;
+    --red:       #f85149;
+    --amber:     #d29922;
+    --gold:      #e3b341;
+    --purple:    #bc8cff;
+    --text:      #e6edf3;
+    --muted:     #8b949e;
+    --dim:       #484f58;
+    --mono:      'JetBrains Mono', monospace;
+    --sans:      'Inter', sans-serif;
+    --r:         8px;
+    --r-sm:      5px;
+}
+
+html, body { height: 100%; overflow: hidden; }
+
+body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+}
+
+.sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    padding: 20px 18px 16px;
+    border-bottom: 1px solid var(--border2);
+}
+
+.logo-mark {
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 3px;
+}
+
+.logo-sub {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    margin-top: 3px;
+    text-transform: uppercase;
+}
+
+.nav {
+    list-style: none;
+    padding: 10px 8px;
+    flex: 1;
+}
+
+.nav li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--r-sm);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: background .15s, color .15s;
+    margin-bottom: 2px;
+}
+
+.nav li:hover { background: var(--surface2); color: var(--text); }
+
+.nav li.active {
+    background: rgba(88,166,255,.1);
+    color: var(--accent);
+}
+
+.nav-icon { font-size: 15px; width: 18px; text-align: center; }
+
+.nav-logout { color: var(--red) !important; opacity: .75; }
+.nav-logout:hover { background: rgba(248,81,73,.08) !important; opacity: 1; }
+
+.sidebar-status {
+    padding: 14px 16px;
+    border-top: 1px solid var(--border2);
+}
+
+.status-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+}
+
+.dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.dot-live    { background: var(--green);  box-shadow: 0 0 0 2px rgba(63,185,80,.25); animation: pulse-green 2s infinite; }
+.dot-amber   { background: var(--amber);  box-shadow: 0 0 0 2px rgba(210,153,34,.25); }
+.dot-offline { background: var(--red);    box-shadow: 0 0 0 2px rgba(248,81,73,.25); }
+
+@keyframes pulse-green {
+    0%,100% { box-shadow: 0 0 0 2px rgba(63,185,80,.25); }
+    50%      { box-shadow: 0 0 0 5px rgba(63,185,80,0); }
+}
+
+.status-label { color: var(--text); font-weight: 600; }
+.status-source { font-size: 10px; color: var(--dim); margin-top: 4px; letter-spacing: 1px; }
+
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.topbar {
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    gap: 16px;
+}
+
+.topbar-left h1 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.topbar-left p {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 1px;
+}
+
+.topbar-pills {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pill {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.pill b { color: var(--text); font-weight: 600; }
+
+.pill-emg {
+    border-color: rgba(248,81,73,.5);
+    background: rgba(248,81,73,.08);
+    color: var(--red);
+    animation: emg-flash 1s infinite;
+}
+
+@keyframes emg-flash {
+    0%,100% { background: rgba(248,81,73,.08); }
+    50%      { background: rgba(248,81,73,.18); }
+}
+
+.content {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 24px;
+    gap: 16px;
+}
+
+.stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.stat-value {
+    font-family: var(--mono);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1;
+}
+
+.stat-value.accent { color: var(--accent); }
+.stat-value.green  { color: var(--green); }
+.stat-value.red    { color: var(--red); }
+.stat-value.gold   { color: var(--gold); }
+
+.stat-sub {
+    font-size: 10px;
+    color: var(--dim);
+    margin-top: 2px;
+}
+
+.lane-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    align-content: start;
+}
+
+.lane-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    transition: border-color .25s, box-shadow .25s, background .25s;
+}
+
+.lane-card.state-green {
+    border-color: rgba(63,185,80,.5);
+    background: linear-gradient(160deg, rgba(63,185,80,.06) 0%, var(--surface) 60%);
+    box-shadow: 0 0 20px rgba(63,185,80,.06);
+}
+
+.lane-card.state-amber {
+    border-color: rgba(210,153,34,.4);
+    background: linear-gradient(160deg, rgba(210,153,34,.05) 0%, var(--surface) 60%);
+}
+
+.lane-card.state-emg {
+    border-color: rgba(248,81,73,.6);
+    background: linear-gradient(160deg, rgba(248,81,73,.08) 0%, var(--surface) 60%);
+    box-shadow: 0 0 24px rgba(248,81,73,.1);
+    animation: emg-card-pulse 1.2s infinite;
+}
+
+@keyframes emg-card-pulse {
+    0%,100% { box-shadow: 0 0 14px rgba(248,81,73,.1); }
+    50%      { box-shadow: 0 0 28px rgba(248,81,73,.25); }
+}
+
+.lane-card.state-top {
+    border-color: rgba(227,179,65,.5);
+    box-shadow: 0 0 20px rgba(227,179,65,.1);
+}
+
+.card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.card-lane-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.card-lane-id {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--dim);
+    margin-top: 2px;
+}
+
+.rank-badge {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.rank-1 { background: rgba(227,179,65,.15); color: var(--gold);   border: 1px solid rgba(227,179,65,.35); }
+.rank-2 { background: rgba(192,192,192,.1); color: #aaa;          border: 1px solid rgba(192,192,192,.2); }
+.rank-3 { background: rgba(160,100,60,.15); color: #c08060;       border: 1px solid rgba(160,100,60,.25); }
+.rank-n { background: rgba(100,100,100,.1); color: var(--dim);    border: 1px solid rgba(100,100,100,.15); }
+
+.tl-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tl-housing {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: #0a0e14;
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 6px 5px;
+    flex-shrink: 0;
+}
+
+.bulb {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: #1a1f28;
+    transition: background .3s, box-shadow .3s;
+}
+
+.bulb.on-r { background: var(--red);   box-shadow: 0 0 8px var(--red),   0 0 16px rgba(248,81,73,.3); }
+.bulb.on-a { background: var(--amber); box-shadow: 0 0 8px var(--amber), 0 0 16px rgba(210,153,34,.3); }
+.bulb.on-g { background: var(--green); box-shadow: 0 0 8px var(--green), 0 0 16px rgba(63,185,80,.3); }
+
+.tl-info { flex: 1; min-width: 0; }
+
+.tl-timer {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--muted);
+}
+
+.tl-timer.t-r { color: var(--red); }
+.tl-timer.t-a { color: var(--amber); }
+.tl-timer.t-g { color: var(--green); }
+
+.tl-phase {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-top: 3px;
+}
+
+.card-stats {
+    border-top: 1px solid var(--border2);
+    padding-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+}
+
+.stat-line .k { color: var(--muted); }
+
+.stat-line .v {
+    font-family: var(--mono);
+    font-weight: 600;
+    color: var(--text);
+}
+
+.stat-line .v.hi { color: var(--accent); }
+
+
+.green-bar-wrap {
+    margin-top: 4px;
+}
+
+.green-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--dim);
+    margin-bottom: 3px;
+}
+
+.green-bar-label span:last-child { font-family: var(--mono); color: var(--green); }
+
+.green-bar {
+    height: 3px;
+    background: var(--border2);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.green-bar-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 2px;
+    transition: width .5s ease;
+}
+
+.emg-tag {
+    position: absolute;
+    top: 10px; right: 10px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 2px 6px;
+    background: var(--red);
+    color: #fff;
+    border-radius: 3px;
+    animation: emg-flash 1s infinite;
+}
+
+.override-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--red);
+    text-align: center;
+    letter-spacing: 1px;
+    padding: 3px 0 0;
+    opacity: .8;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="logo">
+        <div class="logo-mark">TRAFFIQ</div>
+        <div class="logo-sub">Smart Traffic Control</div>
+    </div>
+
+    <ul class="nav">
+        <li class="active">
+            <span class="nav-icon">◈</span> Simulation
+        </li>
+        <li class="nav-logout" onclick="window.location='/logout'">
+            <span class="nav-icon">⏻</span> Logout
+        </li>
+    </ul>
+
+    <div class="sidebar-status">
+        <div class="status-row">
+            <div class="dot dot-amber" id="conn-dot"></div>
+            <span class="status-label" id="conn-label">CONNECTING</span>
+        </div>
+        <div class="status-source" id="conn-source">SOURCE: —</div>
+    </div>
+</aside>
+
+<div class="main">
+
+    <div class="topbar">
+        <div class="topbar-left">
+            <h1>Traffic Control Dashboard</h1>
+            <p>Priority Queue · Aging · Dynamic Timing · Emergency Override</p>
+        </div>
+        <div class="topbar-pills">
+            <div class="pill">Step <b id="tp-step">0</b></div>
+            <div class="pill">Top Priority <b id="tp-priority">—</b></div>
+            <div class="pill" id="tp-emg" style="display:none"> EMERGENCY ACTIVE</div>
+        </div>
+    </div>
+
+   
+    <div class="content">
+
+        <div class="stat-row">
+            <div class="stat-card">
+                <div class="stat-label">Simulation Step</div>
+                <div class="stat-value accent" id="sc-step">0</div>
+                <div class="stat-sub">TraCI ticks</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Vehicles</div>
+                <div class="stat-value green" id="sc-vehicles">0</div>
+                <div class="stat-sub">across all lanes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Active Lanes</div>
+                <div class="stat-value gold" id="sc-active">0</div>
+                <div class="stat-sub">lanes with vehicles</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Emergency Alerts</div>
+                <div class="stat-value red" id="sc-emg">0</div>
+                <div class="stat-sub">cumulative overrides</div>
+            </div>
+        </div>
+
+        <div class="lane-grid" id="lane-grid"></div>
+
+    </div>
+</div>
+
+<script>
+
+let laneOrder   = {};   
+let emgCount    = 0;
+let lastEmgLane = null;
+let firstPoll   = true;
+
+function renderAll(data) {
+    const lanes        = data.lanes          || {};
+    const laneIds      = Object.keys(lanes);
+    const topId        = data.top_priority_lane || null;
+    const emgLane      = data.emergency_lane    || null;
+    const activeLanes  = data.active_lanes      || [];
+    const totalVeh     = data.total_vehicles    || 0;
+    const step         = data.sim_step          || 0;
+
+
+    laneIds.forEach((id, i) => { if (!laneOrder[id]) laneOrder[id] = i + 1; });
+
+    if (emgLane && emgLane !== lastEmgLane) emgCount++;
+    lastEmgLane = emgLane;
+
+    document.getElementById('sc-step').textContent     = step;
+    document.getElementById('sc-vehicles').textContent = totalVeh;
+    document.getElementById('sc-active').textContent   = activeLanes.length;
+    document.getElementById('sc-emg').textContent      = emgCount;
+
+    document.getElementById('tp-step').textContent     = step;
+    document.getElementById('tp-priority').textContent =
+        topId ? `Lane ${laneOrder[topId] || topId}` : '—';
+
+    const emgPill = document.getElementById('tp-emg');
+    emgPill.style.display = emgLane ? 'inline-flex' : 'none';
+    if (emgPill.style.display !== 'none') emgPill.classList.add('pill-emg');
+
+    // ── Connection status ───────────────────────────────────────────────
+    const isLive = data.source === 'traci';
+    const dot    = document.getElementById('conn-dot');
+    dot.className        = 'dot ' + (isLive ? 'dot-live' : 'dot-offline');
+    document.getElementById('conn-label').textContent  = isLive ? 'SUMO LIVE' : 'DISCONNECTED';
+    document.getElementById('conn-source').textContent = 'SOURCE: ' + (data.source || '—').toUpperCase();
+
+    // ── Lane cards ──────────────────────────────────────────────────────
+    const grid = document.getElementById('lane-grid');
+
+    // Remove stale cards
+    grid.querySelectorAll('.lane-card').forEach(c => {
+        if (!lanes[c.dataset.lane]) c.remove();
+    });
+
+    laneIds.forEach(lid => {
+        const d           = lanes[lid];
+        const veh         = d.vehicles       || 0;
+        const wait        = d.wait_time      || 0;
+        const phase       = d.phase          || 'red';
+        const timeLeft    = d.time_remaining || 0;
+        const score       = d.priority_score || 0;
+        const rank        = d.priority_rank  || 0;
+        const greenTime   = d.green_time     || 5;
+        const emergency   = d.emergency      || false;
+        const override    = d.override       || null;
+        const isActive    = d.is_active      || false;
+        const dispNum     = laneOrder[lid]   || '?';
+
+        const rankLabel = `#${rank}`;
+        const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-n';
+
+        // Green time bar fill (out of 60s cycle)
+        const barPct = Math.min(100, Math.round((greenTime / 60) * 100));
+
+        let card = grid.querySelector(`.lane-card[data-lane="${lid}"]`);
+
+        if (!card) {
+            // ── Create card ─────────────────────────────────────────────
+            card              = document.createElement('div');
+            card.className    = 'lane-card';
+            card.dataset.lane = lid;
+            card.innerHTML    = `
+                <div class="card-head">
+                    <div>
+                        <div class="card-lane-name">Lane ${dispNum}</div>
+                        <div class="card-lane-id">${lid}</div>
+                    </div>
+                    <div class="rank-badge ${rankClass} rank-el">${rankLabel}</div>
+                </div>
+
+                <div class="tl-row">
+                    <div class="tl-housing">
+                        <div class="bulb bulb-r"></div>
+                        <div class="bulb bulb-a"></div>
+                        <div class="bulb bulb-g"></div>
+                    </div>
+                    <div class="tl-info">
+                        <div class="tl-timer t-${phase[0]} timer-el">${timeLeft}s</div>
+                        <div class="tl-phase phase-el">${phase.toUpperCase()}</div>
+                    </div>
+                </div>
+
+                <div class="card-stats">
+                    <div class="stat-line">
+                        <span class="k">Vehicles</span>
+                        <span class="v veh-el">${veh}</span>
+                    </div>
+                    <div class="stat-line">
+                        <span class="k">Wait Time</span>
+                        <span class="v wait-el">${wait}s</span>
+                    </div>
+                    <div class="stat-line">
+                        <span class="k">Priority Score</span>
+                        <span class="v hi score-el">${score}</span>
+                    </div>
+                    <div class="stat-line">
+                        <span class="k">Emergency</span>
+                        <span class="v emg-el">${emergency ? '🚑 YES' : 'None'}</span>
+                    </div>
+                    <div class="green-bar-wrap">
+                        <div class="green-bar-label">
+                            <span>Dyn. Green Time</span>
+                            <span class="green-time-el">${greenTime}s</span>
+                        </div>
+                        <div class="green-bar">
+                            <div class="green-bar-fill bar-fill-el" style="width:${barPct}%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                ${override === 'stopped'        ? '<div class="override-tag">⛔ OVERRIDE STOP</div>' : ''}
+                ${emergency                      ? '<div class="emg-tag">EMG</div>' : ''}
+            `;
+            grid.appendChild(card);
+        } else {
+            // ── Update existing card ────────────────────────────────────
+            const q = s => card.querySelector(s);
+
+            q('.veh-el').textContent        = veh;
+            q('.wait-el').textContent       = wait + 's';
+            q('.score-el').textContent      = score;
+            q('.emg-el').textContent        = emergency ? '🚑 YES' : 'None';
+            q('.green-time-el').textContent = greenTime + 's';
+            q('.bar-fill-el').style.width   = barPct + '%';
+
+            // Rank badge
+            const rEl = q('.rank-el');
+            rEl.textContent = rankLabel;
+            rEl.className   = `rank-badge ${rankClass} rank-el`;
+
+            // Timer + phase
+            const tEl = q('.timer-el'), pEl = q('.phase-el');
+            tEl.textContent = timeLeft + 's';
+            tEl.className   = `tl-timer t-${phase[0]} timer-el`;
+            pEl.textContent = phase.toUpperCase();
+
+            // Bulbs
+            q('.bulb-r').className = 'bulb bulb-r' + (phase === 'red'   ? ' on-r' : '');
+            q('.bulb-a').className = 'bulb bulb-a' + (phase === 'amber' ? ' on-a' : '');
+            q('.bulb-g').className = 'bulb bulb-g' + (phase === 'green' ? ' on-g' : '');
+
+            // Emergency badge
+            let emgBadge = q('.emg-tag');
+            if (emergency && !emgBadge) {
+                const b = document.createElement('div');
+                b.className   = 'emg-tag';
+                b.textContent = 'EMG';
+                card.appendChild(b);
+            } else if (!emergency && emgBadge) {
+                emgBadge.remove();
+            }
+
+            // Override tag
+            let ovTag = q('.override-tag');
+            if (override === 'stopped' && !ovTag) {
+                const t = document.createElement('div');
+                t.className   = 'override-tag';
+                t.textContent = ' OVERRIDE STOP';
+                card.appendChild(t);
+            } else if (override !== 'stopped' && ovTag) {
+                ovTag.remove();
+            }
+        }
+
+        // Card state classes
+        const isEmg = emergency;
+        const isTop = lid === topId && !isEmg;
+        card.classList.toggle('state-green', phase === 'green' && !isEmg);
+        card.classList.toggle('state-amber', phase === 'amber' && !isEmg);
+        card.classList.toggle('state-emg',   isEmg);
+        card.classList.toggle('state-top',   isTop);
+    });
+}
+
+// ── Poll API ──────────────────────────────────────────────────────────────
+async function fetchData() {
+    try {
+        const res  = await fetch('/api/traffic');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        if (data.error) { console.warn('[TraffiQ]', data.error); return; }
+        renderAll(data);
+    } catch (e) {
+        console.warn('[TraffiQ] API error:', e.message);
+        document.getElementById('conn-dot').className = 'dot dot-offline';
+        document.getElementById('conn-label').textContent = 'DISCONNECTED';
+    }
+}
+
+fetchData();
+setInterval(fetchData, 2000);
+</script>
+</body>
+</html>

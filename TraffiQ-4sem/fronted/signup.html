@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Signup — TraffiQ</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: monospace;
+    background: #5d3b3b;
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .box {
+    width: 380px;
+    background: #4a2e2e;
+    border: 1px solid #a06060;
+    border-radius: 12px;
+    padding: 40px 36px 36px;
+  }
+  .sys-tag {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #d4aaaa;
+    margin-bottom: 10px;
+  }
+  h2 {
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: 3px;
+    color: #ffffff;
+    margin-bottom: 28px;
+    text-transform: uppercase;
+  }
+  .divider {
+    height: 1px;
+    background: #a06060;
+    margin-bottom: 28px;
+    opacity: .4;
+  }
+  form { display: flex; flex-direction: column; gap: 14px; }
+  .input-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: #d4aaaa;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: block;
+  }
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    padding: 11px 14px;
+    background: #3d2424;
+    border: 1px solid #a06060;
+    border-radius: 6px;
+    color: #ffffff;
+    font-family: monospace;
+    font-size: 13px;
+    outline: none;
+  }
+  input::placeholder { color: #c49090; }
+  input:focus { border-color: #ffffff; }
+  button[type="submit"] {
+    margin-top: 6px;
+    width: 100%;
+    padding: 13px;
+    background: transparent;
+    border: 1px solid #ffffff;
+    border-radius: 6px;
+    color: #ffffff;
+    font-family: monospace;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  button[type="submit"]:hover { background: rgba(255,255,255,.1); }
+  .message {
+    margin-top: 16px;
+    padding: 10px 14px;
+    background: rgba(0,0,0,.2);
+    border: 1px solid #b07070;
+    border-radius: 6px;
+    font-size: 11px;
+    color: #d4aaaa;
+    text-align: center;
+  }
+  .link {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: #d4aaaa;
+  }
+  .link a { color: #ffffff; text-decoration: none; }
+  .link a:hover { text-decoration: underline; }
+  .status-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    padding: 8px 24px;
+    border-top: 1px solid #4a2e2e;
+    background: #3d2424;
+    font-size: 10px;
+    color: #d4aaaa;
+  }
+</style>
+</head>
+<body>
+
+<div class="box">
+  <div class="sys-tag">/</div>
+  <h2>Create Account</h2>
+  <div class="divider"></div>
+
+  <form action="/signup" method="POST">
+    <div>
+      <label class="input-label">Username</label>
+      <input type="text" name="username" placeholder="Enter username" required>
+    </div>
+    <div>
+      <label class="input-label">Email</label>
+      <input type="email" name="email" placeholder="Enter email">
+    </div>
+    <div>
+      <label class="input-label">Password</label>
+      <input type="password" name="password" placeholder="Enter password" required>
+    </div>
+    <button type="submit">Signup →</button>
+  </form>
+
+  {% if message %}
+  <p class="message">{{ message }}</p>
+  {% endif %}
+
+  <div class="link">
+    Already have an account? <a href="/login">Login →</a>
+  </div>
+</div>
+
+<div class="status-bar">SYSTEM ONLINE</div>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2026-03-05T22:10:04.491096+05:30 by Eclipse SUMO netedit 1.26.0
+-->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <!-- VTypes -->
+    <vType id="t_0" vClass="pedestrian"/>
+    <vType id="t_1" vClass="taxi"/>
+    <vType id="t_2"/>
+    <vType id="t_3" vClass="delivery"/>
+    <vType id="t_4" vClass="bus"/>
+    <vType id="t_5" vClass="motorcycle"/>
+    <vType id="t_6" vClass="emergency"/>
+    <vType id="t_7"/>
+    <!-- Ambulance vType -->
+    <vType id="ambulance" vClass="emergency" color="1,1,1" guiShape="emergency"
+           length="6.5" maxSpeed="22.0" accel="2.0" decel="4.0" sigma="0.0"
+           emergencyDecel="7.0" speedFactor="1.2"/>
+    <!-- Vehicles, persons and containers (sorted by depart) -->
+    <flow id="f_0" type="t_6" begin="0.00" end="3600.00" perHour="500.00" color="white" from="-E1" to="E2"/>
+    <flow id="f_1" type="t_6" begin="0.00" end="3600.00" perHour="150.00" color="white" from="E0" to="E0.51"/>
+    <flow id="f_2" type="t_1" begin="0.00" end="3600.00" perHour="150.00" from="-E0" to="-E0.74"/>
+    <flow id="f_3" type="t_2" begin="0.00" end="3600.00" perHour="500.00" color="magenta" from="-E1" to="E2"/>
+    <flow id="f_4" type="t_1" begin="0.00" end="3600.00" perHour="150.00" from="-E2" to="E1"/>
+    <flow id="f_6" type="t_2" begin="0.00" end="3600.00" perHour="100.00" color="magenta" from="E0" to="E0.51"/>
+    <flow id="f_7" type="t_3" begin="0.00" end="3600.00" perHour="500.00" color="red" from="-E0" to="-E0.74"/>
+    <flow id="f_8" type="t_3" begin="0.00" end="3600.00" perHour="500.00" color="red" from="-E2" to="E1"/>
+    <!-- 5 ambulances staggered -->
+    <trip id="ambu_1" type="ambulance" depart="90"  color="1,1,1" from="-E1" to="E2"/>
+    <trip id="ambu_2" type="ambulance" depart="240" color="1,1,1" from="-E1" to="E2"/>
+    <trip id="ambu_3" type="ambulance" depart="420" color="1,1,1" from="E0"  to="E2"/>
+    <trip id="ambu_4" type="ambulance" depart="600" color="1,1,1" from="-E2" to="E1"/>
+    <trip id="ambu_5" type="ambulance" depart="800" color="1,1,1" from="-E1" to="E2"/>
+</routes>

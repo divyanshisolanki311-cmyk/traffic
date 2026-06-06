@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TraffiQ</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: monospace;
+    background: #5d3b3b;
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .sys-tag {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #d4aaaa;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  h1 {
+    font-size: 46px;
+    font-weight: 400;
+    letter-spacing: 4px;
+    text-align: center;
+    color: #ffffff;
+    line-height: 1.15;
+  }
+  h1 span { color: #d4aaaa; }
+  .subtitle {
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: #d4aaaa;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .divider {
+    width: 200px;
+    height: 1px;
+    background: #ffffff;
+    margin: 4px 0 32px;
+    opacity: .4;
+  }
+  .card-container {
+    display: flex;
+    gap: 24px;
+  }
+  .card {
+    width: 200px;
+    padding: 32px 24px;
+    background: #4a2e2e;
+    border: 1px solid #a06060;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+  }
+  .card:hover {
+    background: #3d2424;
+  }
+  .card h2 {
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #ffffff;
+  }
+  .card-sub {
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: #d4aaaa;
+    text-align: center;
+  }
+  .status-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    padding: 8px 24px;
+    border-top: 1px solid #4a2e2e;
+    background: #3d2424;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #d4aaaa;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="sys-tag"></div>
+  <h1>TRAFFIC<br><span>CONTROL</span></h1>
+  <p class="subtitle">AI Based Traffic Monitoring Dashboard</p>
+  <div class="divider"></div>
+  <div class="card-container">
+    <a class="card" href="/login">
+      <h2>Login</h2>
+      <div class="card-sub">Access your dashboard</div>
+    </a>
+    <a class="card" href="/signup">
+      <h2>Signup</h2>
+      <div class="card-sub">Create a new account</div>
+    </a>
+  </div>
+</div>
+
+<div class="status-bar">
+  <span>SYSTEM ONLINE</span>
+</div>
+
+</body>
+</html>
